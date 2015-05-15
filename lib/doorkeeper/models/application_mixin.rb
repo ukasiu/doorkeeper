@@ -4,6 +4,7 @@ module Doorkeeper
 
     include OAuth::Helpers
     include Models::Scopes
+    include ActiveModel::MassAssignmentSecurity if defined?(::ProtectedAttributes)
 
     included do
       has_many :access_grants, dependent: :destroy, class_name: 'Doorkeeper::AccessGrant'
@@ -15,30 +16,18 @@ module Doorkeeper
 
       before_validation :generate_uid, :generate_secret, on: :create
 
-      if ::Rails.version.to_i < 4 || defined?(::ProtectedAttributes)
+      if respond_to?(:attr_accessible)
         attr_accessible :name, :redirect_uri
       end
     end
 
     module ClassMethods
       def by_uid_and_secret(uid, secret)
-        where(uid: uid, secret: secret).limit(1).to_a.first
+        where(uid: uid.to_s, secret: secret.to_s).limit(1).to_a.first
       end
 
       def by_uid(uid)
-        where(uid: uid).limit(1).to_a.first
-      end
-    end
-
-    alias_method :original_scopes, :scopes
-    def scopes
-      if has_scopes?
-        original_scopes
-      else
-        fail NameError, "Missing column: `applications.scopes`.", <<-MSG.squish
-If you are using ActiveRecord run `rails generate doorkeeper:application_scopes
-&& rake db:migrate` to add it.
-        MSG
+        where(uid: uid.to_s).limit(1).to_a.first
       end
     end
 

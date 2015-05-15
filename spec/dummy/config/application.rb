@@ -5,13 +5,14 @@ require 'sprockets/railtie'
 
 Bundler.require :default
 
+require 'yaml'
+
 orm = if DOORKEEPER_ORM =~ /mongoid/
         Mongoid.load!(File.join(File.dirname(File.expand_path(__FILE__)), "#{DOORKEEPER_ORM}.yml"))
         :mongoid
       else
         DOORKEEPER_ORM
       end
-
 require "#{orm}/railtie"
 
 module Dummy

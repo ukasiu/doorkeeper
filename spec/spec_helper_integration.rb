@@ -2,16 +2,14 @@ ENV['RAILS_ENV'] ||= 'test'
 TABLE_NAME_PREFIX = ENV['table_name_prefix'] || nil
 TABLE_NAME_SUFFIX = ENV['table_name_suffix'] || nil
 
-orm = ENV['BUNDLE_GEMFILE'].match(/Gemfile\.(.+)\.rb/)
+orm = (ENV['BUNDLE_GEMFILE'] || '').match(/Gemfile\.(.+)\.rb/)
 DOORKEEPER_ORM = (orm && orm[1] || :active_record).to_sym
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
 
 require 'capybara/rspec'
-require 'rspec/active_model/mocks'
 require 'dummy/config/environment'
 require 'rspec/rails'
-require 'rspec/autorun'
 require 'generator_spec/test_case'
 require 'timecop'
 require 'database_cleaner'
@@ -24,11 +22,7 @@ end
 Rails.logger.info "====> Rails version: #{Rails.version}"
 Rails.logger.info "====> Ruby version: #{RUBY_VERSION}"
 
-if [:mongoid2, :mongoid3, :mongoid4].include?(DOORKEEPER_ORM)
-  require "support/orm/mongoid"
-else
-  require "support/orm/#{DOORKEEPER_ORM}"
-end
+require "support/orm/#{DOORKEEPER_ORM}"
 
 ENGINE_RAILS_ROOT = File.join(File.dirname(__FILE__), '../')
 
@@ -39,6 +33,8 @@ RSpec.configure do |config|
   config.mock_with :rspec
 
   config.infer_base_class_for_anonymous_controllers = false
+
+  config.include RSpec::Rails::RequestExampleGroup, type: :request
 
   config.before do
     DatabaseCleaner.start
