@@ -4,23 +4,6 @@ User-visible changes worth mentioning.
 
 ---
 
-## 3.0.0 (rc2)
-
-### Backward incompatible changes
-
-- [#678] Change application-specific scopes to take precedence over server-wide
-  scopes. This removes the previous behavior where the intersection between
-  application and server scopes was used.
-
-### Other changes
-
-- [#671] Fixes `NoMethodError - undefined method 'getlocal'` when calling
-  the /oauth/token path. Switch from using a DateTime object to update
-  AR to using a Time object. (Issue #668)
-- [#677] Support editing application-specific scopes via the standard forms
-- [#682] Pass error hash to Grape `error!`
-- [#683] Generate application secret/UID if fields are blank strings
-
 ## 3.0.0 (rc1)
 
 ### Backward incompatible changes
@@ -29,9 +12,6 @@ User-visible changes worth mentioning.
   https://github.com/doorkeeper-gem/doorkeeper-mongodb. If you use ActiveRecord
   you don’t need to do any change, otherwise you will need to install the new
   plugin.
-- [#665] `doorkeeper_unauthorized_render_options(error:)` and
-  `doorkeeper_forbidden_render_options(error:)` now accept `error` keyword
-  argument.
 
 ### Removed deprecations
 

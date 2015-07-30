@@ -41,12 +41,12 @@ module Doorkeeper::OAuth::Helpers
         Doorkeeper::OAuth::Scopes.from_string 'common svr'
       end
       let(:application_scopes) do
-        Doorkeeper::OAuth::Scopes.from_string 'app123'
+        Doorkeeper::OAuth::Scopes.from_string 'common'
       end
 
-      it 'is valid if scope is included in the application scope list' do
+      it 'is valid if scope is included in the server and the application' do
         expect(ScopeChecker.valid?(
-          'app123',
+          'common',
           server_scopes,
           application_scopes
         )).to be_truthy

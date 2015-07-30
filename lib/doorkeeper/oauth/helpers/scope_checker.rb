@@ -25,7 +25,7 @@ module Doorkeeper
 
           def valid_scopes(server_scopes, application_scopes)
             if application_scopes.present?
-              application_scopes
+              server_scopes & application_scopes
             else
               server_scopes
             end
